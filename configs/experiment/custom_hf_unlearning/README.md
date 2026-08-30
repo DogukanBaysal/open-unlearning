@@ -1,6 +1,10 @@
 # Thesis-specific OpenUnlearning configs
 
-This Hydra config group adapts the [OpenUnlearning framework](../../../README.md) to the synthetic code-unlearning experiments from the thesis. It composes three independent choices:
+This Hydra config group adapts the [OpenUnlearning framework](../../../README.md) to
+**MOCHI (Machine Unlearning of Code with Hidden Information)**. The `secret` task
+supports the thesis's technique comparison in RQ1, `code_unit` transfers the comparison
+to complete functions and classes for RQ2, and the ordering and retain-data overrides
+support the controlled RQ3 experiments. It composes three independent choices:
 
 ```text
 task + model + method

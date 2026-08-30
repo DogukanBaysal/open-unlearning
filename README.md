@@ -23,7 +23,7 @@ We provide efficient and streamlined implementations of the TOFU, MUSE and WMDP 
 
 
 > [!NOTE]
-> This independently versioned fork contains the unlearning methods for *Forgetting by Design* and is pinned as a submodule by the [top-level experiment repository](https://github.com/DogukanBaysal/Code-Unlearning). The thesis-specific `secret`, `code_unit`, and `filtered_code_unit` tasks, model choices, GA/NPO/PROD variants, dataset fields, ordering controls, and commands are documented in [`configs/experiment/custom_hf_unlearning/README.md`](configs/experiment/custom_hf_unlearning/README.md). The remainder of this README documents the upstream OpenUnlearning framework.
+> This independently versioned fork applies OpenUnlearning to **MOCHI (Machine Unlearning of Code with Hidden Information)** for the thesis *Forgetting by Design*. Its experiment configs compare GA, NPO, and PROD on secrets (RQ1), transfer the same methods to complete functions and classes (RQ2), and vary retain-set size and forget–retain objective order (RQ3). The fork is pinned by the [top-level replication repository](https://github.com/DogukanBaysal/Code-Unlearning). Thesis-specific tasks, models, methods, fields, ordering controls, and commands are documented in [`configs/experiment/custom_hf_unlearning/README.md`](configs/experiment/custom_hf_unlearning/README.md); the remainder of this README describes the upstream framework.
 
 
 We invite the LLM unlearning community to collaborate by adding new benchmarks, unlearning methods, datasets and evaluation metrics here to expand OpenUnlearning's features, gain feedback from wider usage and drive progress in the field.
