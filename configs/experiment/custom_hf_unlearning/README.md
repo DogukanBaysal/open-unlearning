@@ -149,66 +149,39 @@ For the double-retain ablation, keep random order and change the dataset:
 data.batch_mode=unpaired data.batch_order=random retain_dataset_path=dbaysal/retain-full
 ```
 
-`scripts/run_ordered_unlearning.sh` automates the study matrix. Its `retain_first` and `forget_first` jobs use `retain-half`; its job named `random-retain-full` is the separate double-retain ablation, not the equal-size random baseline.
+The top-level `run_ordering_retain_experiments.sh` workflow automates this matrix.
+Its `retain_first` and `forget_first` jobs use `retain-half`; its job named
+`random-retain-full` is the separate double-retain ablation, not the equal-size
+random baseline.
 
 ## Run a matrix
 
-The scripts below run two models across all nine methods and upload each result to the hard-coded `dbaysal` namespace:
+The [top-level experiment repository](https://github.com/DogukanBaysal/Code-Unlearning)
+provides the three supported end-to-end entry points:
 
 ```bash
-bash scripts/run_secret_unlearning.sh
-bash scripts/run_code_unit_unlearning.sh
+bash scripts/run_secret_experiments.sh
+bash scripts/run_code_unit_experiments.sh
+bash scripts/run_ordering_retain_experiments.sh
 ```
 
-Review and edit their `repo_id` construction before use. For local-only work, prefer the single command above with `hub_adapter.enabled=false`.
+Each script distributes independent jobs across visible GPUs, completes unlearning
+before evaluation, and evaluates every epoch checkpoint. The standard secret and
+code-unit workflows cover both models and all nine methods. The ordering/retain-size
+workflow covers the six `_gd`/`_kl` methods, both models, retain-first, forget-first,
+and random retain-full variants.
 
-To rerun every secret-unlearning combination under Hub model names prefixed with
-`new-`, use:
+Preview commands or change the Hugging Face destination without editing code:
 
 ```bash
-bash scripts/run_new_secret_unlearning.sh
+HUB_NAMESPACE=your-account ADAPTER_PREFIX=replication- \
+  bash scripts/run_secret_experiments.sh --dry-run
 ```
 
-This produces repositories such as
-`dbaysal/new-secret-unlearning-qwen2_5_coder_3b-ga`. Preview all 18 commands or
-change the namespace/prefix with environment variables:
-
-```bash
-DRY_RUN=1 HUB_NAMESPACE=dbaysal MODEL_NAME_PREFIX=new- \
-  bash scripts/run_new_secret_unlearning.sh
-```
-
-To rerun every ordering-aware secret method for both models across retain-first,
-forget-first, and random ordering with `retain-full`, use:
-
-```bash
-bash scripts/run_new_secret_ordered_unlearning.sh
-```
-
-The ordered variants use `dbaysal/retain-half`; the random variant uses
-`dbaysal/retain-full`. The matrix covers `ga_gd`, `ga_kl`, `npo_gd`, `npo_kl`,
-`prod_gd`, and `prod_kl`, for 36 jobs in total. Hub names are prefixed with
-`new-`, for example
-`dbaysal/new-secret-unlearning-qwen2_5_coder_3b-npo_kl-retain-first`. The same
-`DRY_RUN`, `HUB_NAMESPACE`, and `MODEL_NAME_PREFIX` controls are supported.
-
-Run the 18 standard jobs and then all 36 ordering jobs back to back with:
-
-```bash
-bash scripts/run_new_secret_full_suite.sh
-```
-
-The second phase starts only after the first phase succeeds. This combined
-entry point supports the same environment variables and optional Hydra
-overrides as the two underlying scripts.
-
-From the repository root, the more configurable ordering runner supports dry-run and namespace controls:
-
-```bash
-DRY_RUN=1 HUB_ADAPTER_ENABLED=false bash scripts/run_ordered_unlearning.sh
-```
-
-See the repository-level [`scripts/README.md`](../../../../scripts/README.md) for multi-GPU scheduling, full-parameter GA, evaluation suites, filters, outputs, and resumability.
+For local-only training and evaluation, use
+`HUB_ADAPTER_ENABLED=false EVAL_MODEL_SOURCE=local`. See the
+[top-level script guide](https://github.com/DogukanBaysal/Code-Unlearning/blob/main/scripts/README.md)
+for the exact thesis settings, phase controls, filters, outputs, and resumability.
 
 ## Uploading artifacts
 
